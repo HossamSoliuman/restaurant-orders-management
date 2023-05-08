@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MenuItemImage extends Model
 {
     use HasFactory;
+    public function menuItem(){
+        return $this->belongsTo(MenuItem::class);
+    }
 }

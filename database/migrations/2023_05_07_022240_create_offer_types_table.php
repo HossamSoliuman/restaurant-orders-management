@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('type');
             $table->integer('amount');
-            $table->foreignId('offer_id')->constrained()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
