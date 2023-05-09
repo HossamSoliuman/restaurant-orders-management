@@ -18,7 +18,7 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (auth()->user() && auth()->user()->role == 'admin') {
+        if (auth()->user() && auth()->user()->role_id == 2) {
             return $next($request);
         }
         return $this->errorResponse('Unauthorized action.',403);

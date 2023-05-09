@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Offer extends Model
 {
     use HasFactory;
+    protected $fillable =[
+        'name',
+        'description',
+        'offer_type_id',
+    ];
     public function menuItem(){
        return  $this->belongsTo(MenuItem::class);
     }

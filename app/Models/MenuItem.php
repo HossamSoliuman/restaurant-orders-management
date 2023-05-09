@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class MenuItem extends Model
 {
     use HasFactory;
-
+    protected $fillable =[
+        'name',
+        'description',
+        'price',
+        'category_id'
+    ];
     public function reviews(){
         return $this->hasMany(Review::class);
     }

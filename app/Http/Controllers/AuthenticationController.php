@@ -16,12 +16,15 @@ class AuthenticationController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users|max:255',
+            'phone' => 'required|string|unique:users|max:255',
             'password' => 'required|string|min:8',
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'role_id' => 1, 
             'password' => bcrypt($validated['password']),
         ]);
 
@@ -38,15 +41,15 @@ class AuthenticationController extends Controller
     public function login(Request $request)
     {
         $validated = $request->validate([
-            'email' => 'required|string|email|max:255',
+            'phone' => 'required|string|max:255',
             'password' => 'required|string|min:8',
         ]);
 
         if (!Auth::attempt($validated)) {
-            return $this->errorResponse('Unauthorized', 401);
+            return $this->errorResponse('Password or phone is wrong', 401);
         }
 
-        $user = User::where('email', $validated['email'])->first();
+        $user = User::where('phone', $validated['phone'])->first();
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return $this->customResponse(
