@@ -2,64 +2,52 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\CategoryResource;
+use App\Models\Category;
+use App\Traits\ApiResponse;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use ApiResponse;
+
     public function index()
     {
-        //
+        $categories = Category::all();
+
+        return $this->customResponse(CategoryResource::collection($categories));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreCategoryRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreCategoryRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
     public function show(Category $category)
     {
-        //
+        $category->load('menuItems');
+
+        return $this->customResponse(CategoryResource::make($category));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateCategoryRequest  $request
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
+    public function store(StoreCategoryRequest $request)
+    {
+        $validated_data = $request->validated();
+
+        $category = Category::create($validated_data);
+
+        return $this->customResponse($category, 'Category created successfully.', 201);
+    }
+
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+        $validated_data = $request->validated();
+
+        $category->update($validated_data);
+
+        return $this->customResponse($category, 'Category updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return $this->customResponse(null, 'Categorydeleted successfully.', 204);
     }
 }

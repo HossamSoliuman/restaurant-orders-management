@@ -61,7 +61,7 @@ class AuthenticationController extends Controller
     {
         $request->user()->tokens()->delete();
 
-        return $this->successResponse(
+        return $this->customResponse(
             [],
             'Successfully logged out.'
         );

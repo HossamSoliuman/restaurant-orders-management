@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,20 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('login',[AuthenticationController::class,'login']);
-Route::post('register',[AuthenticationController::class,'register']);
 
+Route::post('login', [AuthenticationController::class, 'login']);
+Route::post('register', [AuthenticationController::class, 'register']);
+
+Route::resources(
+    [
+        'category' => CategoryController::class,
+    ],
+    [
+        'only' => ['show', 'index']
+    ]
+);
+Route::middleware(['auth'])->group(function(){
+    Route::resources([
+        'category'=>CategoryController::class,
+    ]);
+});
