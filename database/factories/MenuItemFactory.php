@@ -17,7 +17,10 @@ class MenuItemFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => fake()->word(),
+            'description' => fake()->sentence(),
+            'price' => rand(30,150),
+            'category_id' => rand(1,5),
         ];
     }
 }

@@ -17,7 +17,8 @@ class MenuItemImageFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'path'=> 'menu_items/img.jpg',
+            'menu_item_id' => rand(1,10),
         ];
     }
 }

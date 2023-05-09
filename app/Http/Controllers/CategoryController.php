@@ -21,8 +21,8 @@ class CategoryController extends Controller
 
     public function show(Category $category)
     {
-        $category->load('menuItems');
-
+        $category->load('menuItems.images');
+      
         return $this->customResponse(CategoryResource::make($category));
     }
 

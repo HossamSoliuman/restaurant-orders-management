@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MenuItemResource extends JsonResource
@@ -14,6 +15,13 @@ class MenuItemResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            "id" =>$this->id ,
+            "name" =>$this->name ,
+            "description"=> $this->description,
+            "price" => $this->price,
+            "created_at" => Carbon::parse($this->created_at)->diffForHumans(),
+            "images" => MenuItemImageResource::collection($this->images),
+        ];
     }
 }
