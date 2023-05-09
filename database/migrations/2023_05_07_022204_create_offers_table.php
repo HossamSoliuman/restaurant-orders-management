@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->foreignId('offer_type_id')->constrained()->cascadeOnDelete();
+            $table->string('type');
+            $table->integer('amount');
+            $table->foreignId('menu_item_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
