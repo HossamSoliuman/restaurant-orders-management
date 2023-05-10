@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthenticationController extends Controller
 {
@@ -14,10 +16,10 @@ class AuthenticationController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users|max:255',
-            'phone' => 'required|string|unique:users|max:255',
-            'password' => 'required|string|min:8',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'unique:users', 'max:255'],
+            'phone' => ['required', 'string', 'unique:users', 'max:255'],
+            'password' => ['required', 'string', 'min:8'],
         ]);
 
         $user = User::create([
@@ -40,24 +42,25 @@ class AuthenticationController extends Controller
 
     public function login(Request $request)
     {
-        $validated = $request->validate([
-            'phone' => 'required|string|max:255',
-            'password' => 'required|string|min:8',
+        $validatedData = $request->validate([
+            'phone' => ['required', 'string'],
+            'password' => ['required', 'string'],
         ]);
 
-        if (!Auth::attempt($validated)) {
-            return $this->errorResponse('Password or phone is wrong', 401);
+        $user = User::where('phone', $validatedData['phone'])->first();
+        if (!$user || !Hash::check($validatedData['password'], $user->password)) {
+            return $this->errorResponse(
+                'Invalid credentials', 
+                401
+            );
         }
 
-        $user = User::where('phone', $validated['phone'])->first();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return $this->customResponse(
-            [
-                'token' => $token,
-            ],
-            'Successfully logged in.'
-        );
+        return $this->successResponse([
+            'user' => UserResource::make($user),
+            'token' => $token,
+        ]);
     }
 
     public function logout(Request $request)

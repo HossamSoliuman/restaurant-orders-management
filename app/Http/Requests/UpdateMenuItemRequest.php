@@ -24,7 +24,9 @@ class UpdateMenuItemRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'optional|string',
+            'description' => 'optional|string',
+            'price' => 'otional|numeric',  
         ];
     }
 }

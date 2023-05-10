@@ -21,6 +21,6 @@ class AdminMiddleware
         if (auth()->user() && auth()->user()->role_id == 2) {
             return $next($request);
         }
-        return $this->errorResponse('Unauthorized action.',403);
+        return $this->errorResponse('You must be admin to perform this action.',403);
     }
 }
