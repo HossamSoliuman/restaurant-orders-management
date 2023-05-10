@@ -11,7 +11,11 @@ class Offer extends Model
     protected $fillable =[
         'name',
         'description',
-        'offer_type_id',
+        'type',
+        'amount',
+        'menu_item_id',
+        'start_at',
+        'end_at',
     ];
     public function menuItem(){
        return  $this->belongsTo(MenuItem::class);

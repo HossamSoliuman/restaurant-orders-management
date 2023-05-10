@@ -22,6 +22,8 @@ class MenuItemResource extends JsonResource
             "price" => $this->price,
             "created_at" => Carbon::parse($this->created_at)->diffForHumans(),
             "images" => MenuItemImageResource::collection($this->images),
+            "offers"=> OfferResource::collection($this->offers),
+            
         ];
     }
 }

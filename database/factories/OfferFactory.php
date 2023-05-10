@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Offer;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OfferFactory extends Factory
@@ -28,6 +29,8 @@ class OfferFactory extends Factory
             'amount' => $this->faker->randomNumber(2),
             'type' => $this->faker->randomElement($offerTypes),
             'menu_item_id' => rand(1, 5),
+            'start_at' => Carbon::now()->addDays(rand(1, 4))->toDateTimeString(),
+            'end_at' => Carbon::now()->addDays(rand(5, 10))->toDateTimeString(),
         ];
     }
 }

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('type');
             $table->integer('amount');
             $table->foreignId('menu_item_id')->constrained()->cascadeOnDelete();
+            $table->dateTime('start_at');
+            $table->dateTime('end_at');
             $table->timestamps();
         });
     }
