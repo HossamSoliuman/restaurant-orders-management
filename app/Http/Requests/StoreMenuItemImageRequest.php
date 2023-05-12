@@ -13,7 +13,7 @@ class StoreMenuItemImageRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,8 @@ class StoreMenuItemImageRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+           'image' => 'required|file|image',
+           'menu_item_id' => 'required|exists:menu_items,id',
         ];
     }
 }

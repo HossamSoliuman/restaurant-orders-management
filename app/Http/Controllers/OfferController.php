@@ -5,18 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Offer;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
+use App\Http\Resources\OfferResource;
+use App\Traits\ApiResponse;
 
 class OfferController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+    use ApiResponse;
 
     /**
      * Store a newly created resource in storage.
@@ -26,7 +20,8 @@ class OfferController extends Controller
      */
     public function store(StoreOfferRequest $request)
     {
-        //
+        $offer = Offer::create($request->validated());
+        return $this->successResponse(OfferResource::make($offer));
     }
 
     /**
@@ -37,7 +32,7 @@ class OfferController extends Controller
      */
     public function show(Offer $offer)
     {
-        //
+        return $this->successResponse(OfferResource::make($offer));
     }
 
     /**
@@ -49,7 +44,13 @@ class OfferController extends Controller
      */
     public function update(UpdateOfferRequest $request, Offer $offer)
     {
-        //
+        $validatedData = $request->validated();
+
+        $offer->update($validatedData);
+
+        $offer->save();
+
+        return $this->successResponse(OfferResource::make($offer));
     }
 
     /**
@@ -60,6 +61,7 @@ class OfferController extends Controller
      */
     public function destroy(Offer $offer)
     {
-        //
+        $offer->delete();
+        return $this->customResponse([], 'offer succussfully deleted');
     }
 }

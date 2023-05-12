@@ -7,19 +7,12 @@ use App\Http\Requests\StoreMenuItemRequest;
 use App\Http\Requests\UpdateMenuItemRequest;
 use App\Http\Resources\MenuItemResource;
 use App\Traits\ApiResponse;
+use App\Traits\ManagesFiles;
 
 class MenuItemController extends Controller
 {
-    use ApiResponse;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-    }
-
+    use ApiResponse , ManagesFiles;
+   
     /**
      * Store a newly created resource in storage.
      *
@@ -54,7 +47,7 @@ class MenuItemController extends Controller
     public function update(UpdateMenuItemRequest $request, MenuItem $menuItem)
     {
         $menuItem->update($request->validated());
-        return $this->customResponse([], 'Item updated successfully');
+        return $this->customResponse([MenuItemResource::make($menuItem)], 'Item updated successfully');
     }
 
     /**
@@ -71,9 +64,12 @@ class MenuItemController extends Controller
 
     public function forceDestroy($menuItemId)
     {
-        $item = MenuItem::withTrashed()
+        $item = MenuItem::with('images')->withTrashed()
             ->findOrFail($menuItemId);
-
+       
+        foreach ($item->images as $image) {
+            $this->deleteFile($image->path);
+        }
         $item->forceDelete();
         return $this->customResponse([], 'Item permanently deleted.');
     }
@@ -82,7 +78,7 @@ class MenuItemController extends Controller
     {
         $item = MenuItem::withTrashed()
             ->findOrFail($menuItem);
-            return $item;
+           
         $item->restore();
         return $this->customResponse([], 'Item restored.');
     }

@@ -3,6 +3,9 @@
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MenuItemController;
+use App\Http\Controllers\MenuItemImageController;
+use App\Http\Controllers\OfferController;
+use App\Models\MenuItemImage;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,24 +25,39 @@ Route::post('register', [AuthenticationController::class, 'register']);
 Route::post('logout', [AuthenticationController::class, 'logout']);
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
-    Route::delete('menuItems/deleted',[MenuItemController::class,'deleted']);
-    
+
+    Route::delete('menuItems/deleted', [MenuItemController::class, 'deleted']);
+    Route::delete('menuItems/force/{menuItem}', [MenuItemController::class, 'forceDestroy']);
+    Route::get('menuItems/restore/{menuItem}', [MenuItemController::class, 'restore']);
+
     Route::resources([
         'category' => CategoryController::class,
         'menuItems' => MenuItemController::class,
+        'menuItemImages' => MenuItemImageController::class,
+        'offers' => OfferController::class,
     ]);
-    Route::delete('menuItems/force/{menuItem}',[MenuItemController::class,'forceDestroy']);
-    Route::get('menuItems/restore/{menuItem}',[MenuItemController::class,'restore']);
 });
 
 
 Route::apiResources(
     [
         'categories' => CategoryController::class,
+
+    ],
+    [
+        'only' => ['show', 'index']
+    ]
+);
+
+Route::apiResources(
+    [
+        'offers' => OfferController::class,
         'menuItems' => MenuItemController::class,
 
     ],
-    ['only' => ['show', 'index']]
+    [
+        'only' => ['show']
+    ]
 );
 
 Route::middleware(['auth:sanctum'])->group(function () {

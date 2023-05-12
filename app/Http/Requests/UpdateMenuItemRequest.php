@@ -13,7 +13,7 @@ class UpdateMenuItemRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,9 +24,9 @@ class UpdateMenuItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'optional|string',
-            'description' => 'optional|string',
-            'price' => 'otional|numeric',  
+            'name' => 'nullable|string',
+            'description' => 'nullable|string',
+            'price' => 'nullable|numeric',
         ];
     }
 }

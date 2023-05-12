@@ -17,7 +17,12 @@ trait ManagesFiles
     {
         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $fileName = $originalName . '_' . time() . '.' . $file->extension();
-        $filePath = $file->move($directory, $fileName);
+        
+        // Use forward slash to join directory and file name     
+        $filePath = $directory . '/' . $fileName; 
+        
+        $file->move(public_path($directory), $fileName);  
+        
         return $filePath;
     }
 

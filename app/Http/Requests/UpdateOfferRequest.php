@@ -13,7 +13,7 @@ class UpdateOfferRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,13 @@ class UpdateOfferRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => ['string', 'nullable'],  
+            'description' => ['string', 'nullable'], 
+            'type' => ['nullable', 'string'],
+            'amount' => ['numeric', 'nullable'],     
+            'menu_item_id' => ['nullable', 'exists:menu_items,id'],   
+            'start_at' => ['nullable'],      
+            'end_at' => ['nullable', 'after:start_at'],
         ];
     }
 }
