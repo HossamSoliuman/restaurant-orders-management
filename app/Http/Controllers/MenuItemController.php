@@ -80,12 +80,12 @@ class MenuItemController extends Controller
             ->findOrFail($menuItem);
            
         $item->restore();
-        return $this->customResponse([], 'Item restored.');
+        return $this->customResponse([$item], 'Item restored.');
     }
 
     public function deleted()
     {
         $items = MenuItem::onlyTrashed()->get();
-        return MenuItemResource::collection($items);
+        return $this->successResponse(MenuItemResource::collection($items));
     }
 }
