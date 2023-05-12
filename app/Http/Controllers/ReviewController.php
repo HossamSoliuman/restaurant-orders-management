@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Reviews;
-use App\Http\Requests\StoreReviewsRequest;
-use App\Http\Requests\UpdateReviewsRequest;
+use App\Models\Review;
+use App\Http\Requests\StoreReviewRequest;
+use App\Http\Requests\UpdateReviewRequest;
 
-class ReviewsController extends Controller
+class ReviewController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,10 +21,10 @@ class ReviewsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreReviewsRequest  $request
+     * @param  \App\Http\Requests\StoreReviewRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreReviewsRequest $request)
+    public function store(StoreReviewRequest $request)
     {
         //
     }
@@ -32,10 +32,10 @@ class ReviewsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Reviews  $reviews
+     * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function show(Reviews $reviews)
+    public function show(Review $review)
     {
         //
     }
@@ -43,11 +43,11 @@ class ReviewsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateReviewsRequest  $request
-     * @param  \App\Models\Reviews  $reviews
+     * @param  \App\Http\Requests\UpdateReviewRequest  $request
+     * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateReviewsRequest $request, Reviews $reviews)
+    public function update(UpdateReviewRequest $request, Review $review)
     {
         //
     }
@@ -55,10 +55,10 @@ class ReviewsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Reviews  $reviews
+     * @param  \App\Models\Review  $review
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Reviews $reviews)
+    public function destroy(Review $review)
     {
         //
     }

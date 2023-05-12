@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Reviews;
+use App\Models\Review;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ReviewsPolicy
+class ReviewPolicy
 {
     use HandlesAuthorization;
 
@@ -25,10 +25,10 @@ class ReviewsPolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Reviews  $reviews
+     * @param  \App\Models\Review  $review
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Reviews $reviews)
+    public function view(User $user, Review $review)
     {
         //
     }
@@ -48,10 +48,10 @@ class ReviewsPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Reviews  $reviews
+     * @param  \App\Models\Review  $review
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Reviews $reviews)
+    public function update(User $user, Review $review)
     {
         //
     }
@@ -60,10 +60,10 @@ class ReviewsPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Reviews  $reviews
+     * @param  \App\Models\Review  $review
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Reviews $reviews)
+    public function delete(User $user, Review $review)
     {
         //
     }
@@ -72,10 +72,10 @@ class ReviewsPolicy
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Reviews  $reviews
+     * @param  \App\Models\Review  $review
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Reviews $reviews)
+    public function restore(User $user, Review $review)
     {
         //
     }
@@ -84,10 +84,10 @@ class ReviewsPolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Reviews  $reviews
+     * @param  \App\Models\Review  $review
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Reviews $reviews)
+    public function forceDelete(User $user, Review $review)
     {
         //
     }
