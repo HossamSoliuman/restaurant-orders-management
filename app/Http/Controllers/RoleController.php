@@ -5,61 +5,40 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use App\Http\Resources\RoleResource;
+use App\Traits\ApiResponse;
 
 class RoleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    use ApiResponse;
+
     public function index()
     {
-        //
+        $roles = Role::with(['users' => function ($query) {
+            $query->paginate(5);
+        }])->get();
+    
+        return $this->successResponse(RoleResource::collection($roles));
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreRoleRequest  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(StoreRoleRequest $request)
     {
-        //
+        $role = Role::create($request->validated());
+    
+        return $this->successResponse(RoleResource::make($role));    
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Role $role)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateRoleRequest  $request
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        //
+        $role->update($request->validated());
+    
+        return $this->successResponse(RoleResource::make($role));
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
+    
     public function destroy(Role $role)
     {
-        //
+        $role->delete();
+    
+        return $this->customResponse([], 'Successfully deleted');  
     }
 }

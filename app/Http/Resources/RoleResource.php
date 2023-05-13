@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 
-class ReviewResource extends JsonResource
+class RoleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,11 +16,8 @@ class ReviewResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'body' => $this->body,
-            'number_of_stars' => $this->number_of_stars,
-            'user' => UserResource::make($this->user),
-            'is_creator' => Auth::id() === $this->resource->user_id,
-
+            'name' => $this->name,
+            'users' => UserResource::collection($this->whenLoaded('users')),
         ];
     }
 }

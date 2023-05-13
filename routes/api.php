@@ -5,7 +5,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\MenuItemImageController;
 use App\Http\Controllers\OfferController;
-use App\Models\MenuItemImage;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,6 +36,7 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
         'menuItems' => MenuItemController::class,
         'menuItemImages' => MenuItemImageController::class,
         'offers' => OfferController::class,
+        'roles' => RoleController::class,
     ]);
 });
 
@@ -61,5 +63,8 @@ Route::apiResources(
 );
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResources([
+        'reviews' => ReviewController::class,
+    ]);
     Route::post('logout', [AuthenticationController::class, 'logout']);
 });

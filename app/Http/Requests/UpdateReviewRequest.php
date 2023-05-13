@@ -13,7 +13,8 @@ class UpdateReviewRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
+       
     }
 
     /**
@@ -24,7 +25,8 @@ class UpdateReviewRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'number_of_stars' => 'nullable|integer|min:1|max:5',
+            'body' => 'nullable|string|max:500',
         ];
     }
 }
