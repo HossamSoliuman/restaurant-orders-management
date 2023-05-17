@@ -5,17 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\OrderItem;
 use App\Http\Requests\StoreOrderItemRequest;
 use App\Http\Requests\UpdateOrderItemRequest;
+use App\Http\Resources\OrderResource;
+use App\Models\Order;
+use App\Traits\ApiResponse;
 
 class OrderItemController extends Controller
 {
+    use ApiResponse;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Order $order)
     {
-        //
+        $order->load('orderItems');
+        return $this->successResponse(OrderResource::make($order));
     }
 
     /**
@@ -26,7 +31,9 @@ class OrderItemController extends Controller
      */
     public function store(StoreOrderItemRequest $request)
     {
-        //
+        $order=Order::find($request->order_id);
+        
+ 
     }
 
     /**
@@ -36,18 +43,6 @@ class OrderItemController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(OrderItem $orderItem)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateOrderItemRequest  $request
-     * @param  \App\Models\OrderItem  $orderItem
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateOrderItemRequest $request, OrderItem $orderItem)
     {
         //
     }

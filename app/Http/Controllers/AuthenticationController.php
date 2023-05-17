@@ -43,11 +43,14 @@ class AuthenticationController extends Controller
     public function login(Request $request)
     {
         $validatedData = $request->validate([
-            'phone' => ['required', 'string'],
+            'phone_or_email' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
-        $user = User::where('phone', $validatedData['phone'])->first();
+        $user = User::where('phone', $validatedData['phone_or_email'])->first();
+        $user = User::where('email', $validatedData['phone_or_email'])->first();
+
+
         if (!$user || !Hash::check($validatedData['password'], $user->password)) {
             return $this->errorResponse(
                 'Invalid credentials', 

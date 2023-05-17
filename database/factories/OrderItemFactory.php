@@ -17,7 +17,9 @@ class OrderItemFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'order_id' => rand(1,50),
+            'menu_item_id' => rand(1,10),
+            'quantity' => rand(1,3),
         ];
     }
 }

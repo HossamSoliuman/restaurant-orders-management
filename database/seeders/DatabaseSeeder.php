@@ -22,6 +22,9 @@ class DatabaseSeeder extends Seeder
             MenuItemImageSeeder::class,
             OfferSeeder::class,
             ReviewSeeder::class,
+            OrderAddressSeeder::class,
+            OrderSeeder::class,
+            OrderItemSeeder::class,
         ]);
     }
 }

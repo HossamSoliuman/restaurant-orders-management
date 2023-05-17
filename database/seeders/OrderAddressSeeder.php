@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Order;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\OrderAddress;
 use Illuminate\Database\Seeder;
 
-class OrderSeeder extends Seeder
+class OrderAddressSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,6 +14,6 @@ class OrderSeeder extends Seeder
      */
     public function run()
     {
-        Order::factory(50)->create();
+        OrderAddress::factory(5)->create();
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OfferType;
-use App\Http\Requests\StoreOfferTypeRequest;
-use App\Http\Requests\UpdateOfferTypeRequest;
+use App\Models\OrderAddress;
+use App\Http\Requests\StoreOrderAddressRequest;
+use App\Http\Requests\UpdateOrderAddressRequest;
 
-class OfferTypeController extends Controller
+class OrderAddressController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,10 +21,10 @@ class OfferTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreOfferTypeRequest  $request
+     * @param  \App\Http\Requests\StoreOrderAddressRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreOfferTypeRequest $request)
+    public function store(StoreOrderAddressRequest $request)
     {
         //
     }
@@ -32,10 +32,10 @@ class OfferTypeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\OfferType  $offerType
+     * @param  \App\Models\OrderAddress  $orderAddress
      * @return \Illuminate\Http\Response
      */
-    public function show(OfferType $offerType)
+    public function show(OrderAddress $orderAddress)
     {
         //
     }
@@ -43,11 +43,11 @@ class OfferTypeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateOfferTypeRequest  $request
-     * @param  \App\Models\OfferType  $offerType
+     * @param  \App\Http\Requests\UpdateOrderAddressRequest  $request
+     * @param  \App\Models\OrderAddress  $orderAddress
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateOfferTypeRequest $request, OfferType $offerType)
+    public function update(UpdateOrderAddressRequest $request, OrderAddress $orderAddress)
     {
         //
     }
@@ -55,10 +55,10 @@ class OfferTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\OfferType  $offerType
+     * @param  \App\Models\OrderAddress  $orderAddress
      * @return \Illuminate\Http\Response
      */
-    public function destroy(OfferType $offerType)
+    public function destroy(OrderAddress $orderAddress)
     {
         //
     }
