@@ -5,19 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use App\Http\Resources\CommentResource;
+use App\Traits\ApiResponse;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
+    use ApiResponse;
     /**
      * Store a newly created resource in storage.
      *
@@ -26,18 +19,8 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Comment $comment)
-    {
-        //
+        $comment=Comment::create($request->validated());
+        return $this->successResponse(CommentResource::make($comment));
     }
 
     /**
@@ -49,7 +32,8 @@ class CommentController extends Controller
      */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        //
+        $comment->update($request->validated());
+        return $this->successResponse(CommentResource::make($comment));
     }
 
     /**
@@ -60,6 +44,10 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
-        //
+        if(auth()->id()!=$comment->user_id){
+            return $this->errorResponse('Unathorized action',403);
+        }
+        $comment->delete();
+        return $this->customResponse([],'Succussfully deleted');
     }
 }
