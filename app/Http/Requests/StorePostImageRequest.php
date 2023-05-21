@@ -13,7 +13,7 @@ class StorePostImageRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class StorePostImageRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'post_id' => 'required|id|exists:post,id',
+            'images' => 'required|array',
+            'images.*' => 'required|image',
         ];
     }
 }

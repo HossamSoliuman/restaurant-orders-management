@@ -5,19 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\PostImage;
 use App\Http\Requests\StorePostImageRequest;
 use App\Http\Requests\UpdatePostImageRequest;
+use App\Http\Resources\PostResource;
+use App\Models\Post;
+use App\Traits\ApiResponse;
+use App\Traits\ManagesFiles;
 
 class PostImageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
+    use ApiResponse,ManagesFiles;
     /**
      * Store a newly created resource in storage.
      *
@@ -26,30 +21,17 @@ class PostImageController extends Controller
      */
     public function store(StorePostImageRequest $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\PostImage  $postImage
-     * @return \Illuminate\Http\Response
-     */
-    public function show(PostImage $postImage)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdatePostImageRequest  $request
-     * @param  \App\Models\PostImage  $postImage
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdatePostImageRequest $request, PostImage $postImage)
-    {
-        //
+        $images=$request->validated();
+        $post_id=$request->validated('post_id');
+        foreach($images as $image){
+           $path= $this->uploadFile($image,'posts_images');
+            PostImage::create([
+                'post_id' => $post_id ,
+                'path' => $path,
+            ]);
+        }
+        $post=Post::with('postImages')->find($post_id);
+        return $this->successResponse(PostResource::make($post));
     }
 
     /**
@@ -60,6 +42,7 @@ class PostImageController extends Controller
      */
     public function destroy(PostImage $postImage)
     {
-        //
+        $this->deleteFile($postImage->path);
+        return $this->customResponse([],'Image deleted succussfully');
     }
 }
