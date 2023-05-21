@@ -7,10 +7,12 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Traits\ApiResponse;
+use App\Traits\ManagesFiles;
+use Illuminate\Auth\Events\Validated;
 
 class PostController extends Controller
 {
-    use ApiResponse;
+    use ApiResponse, ManagesFiles;
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +20,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts=Post::get()->paginate(10);
+        $posts = Post::get()->paginate(10);
+        $posts->load('PostImages');
         return $this->successResponse(PostResource::collection($posts));
     }
 
@@ -30,7 +33,15 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        //
+        $post = Post::create($request->validated());
+        $images = $request->validated('images');
+        foreach ($images as $image) {
+            $path = $this->uploadFile($image, 'posts_images');
+            $post->postImages->create([
+                'path' => $path,
+            ]);
+        }
+        return $this->successResponse(PostResource::make($post));
     }
 
     /**
@@ -41,7 +52,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $post->load(['comments.user', 'postImages']);
+        return $this->successResponse(PostResource::make($post));
     }
 
     /**
@@ -53,7 +65,8 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        //
+        $post->update($request->validated());
+        return $this->successResponse(PostResource::make($post));
     }
 
     /**
@@ -64,6 +77,11 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->load('postImages');
+        $postImages = $post->postImages;
+        foreach ($postImages as $image) {
+            $this->deleteFile($image->path);
+        }
+        $post->delete();
     }
 }

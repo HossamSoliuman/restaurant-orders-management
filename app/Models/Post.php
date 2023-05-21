@@ -12,11 +12,12 @@ class Post extends Model
         'title',
         'body',
         'likes_count',
+
     ];
     public function comments(){
         return $this->hasMany(Comment::class);
     }
-    public function images(){
+    public function PostImages(){
         return $this->hasMany(PostImage::class);
     }
 }
