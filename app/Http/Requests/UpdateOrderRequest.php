@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateOrderRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class UpdateOrderRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +25,10 @@ class UpdateOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'items' => [ 'array', 'min:1'],
+            'items.*.id' => ['integer', Rule::exists('menu_items', 'id')],
+            'items.*.quantity' => ['integer', 'min:1'],
+            'status' => ['string', 'in:pending,received,preparing,delivering,canceled'],    
         ];
     }
 }

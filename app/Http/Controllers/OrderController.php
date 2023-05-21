@@ -6,22 +6,13 @@ use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Models\OrderItem;
 use App\Services\OrderService;
 use App\Traits\ApiResponse;
 
 class OrderController extends Controller
 {
     use ApiResponse;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(OrderService $orderService)
-    {
-        return $orderService->GetCurrentOrdersBaseOnUserRole();
-    }
-
     /**a
      * Store a newly created resource in storage.
      *
@@ -30,10 +21,29 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
+        // return $request->validated();
         $order = Order::create([
-            'user_id' => $request->validated('user_id'),
+            'user_id' => auth()->id(),
+            'order_address_id' => $request->validated('order_address_id'),
+            'status' => 'pending',
         ]);
-        // $order->orderItems->
+
+        $items = $request->validated('items');
+        $orderItems = [];
+
+        foreach ($items as $item) {
+            $orderItems[] = new OrderItem([
+                'menu_item_id' => $item['id'],
+                'quantity' => $item['quantity'],
+
+            ]);
+        }
+
+        $order->orderItems()->saveMany($orderItems);
+
+        $order->load('orderItems', 'orderAddress');
+
+        return $this->successResponse(OrderResource::make($order));
     }
 
     /**
@@ -42,19 +52,17 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $order)
+    public function show(Order $order, OrderService $orderService)
     {
-        $order->load(['orderAddress', 'user', 'orderItems']);
-        return $this->successResponse(OrderResource::make($order));
+        return $orderService->show($order);
     }
 
-    public function update(UpdateOrderRequest $request, Order $order,OrderService $orderService)
+    public function update(UpdateOrderRequest $request, Order $order, OrderService $orderService)
     {
-        $items=$request->validated('items');
-        $status=$request->validated('status');
-
-        $orderService->updateStatus($order,$status);
-        $orderService->addItems($order,$items);
+        return $request->validated();
+        $validatedData = $request->validated();
+        $updatedOrder = $orderService->updateOrder($order, $validatedData);
+        $updatedOrder->load(['orderAddress', 'orderItems', 'user']);
+        return $this->successResponse(OrderResource::make($updatedOrder));
     }
-
 }

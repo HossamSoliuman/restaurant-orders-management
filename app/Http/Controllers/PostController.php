@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
+use App\Traits\ApiResponse;
 
 class PostController extends Controller
 {
+    use ApiResponse;
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +18,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts=Post::get()->paginate(10);
+        return $this->successResponse(PostResource::collection($posts));
     }
 
     /**

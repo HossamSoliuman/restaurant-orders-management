@@ -25,9 +25,19 @@ class StoreOrderRequest extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => ['required', 'integer', Rule::exists('users', 'id')],
+            'order_address_id' => ['required', 'integer', Rule::exists('order_addresses', 'id')],
             'items' => ['required', 'array', 'min:1'],
-            'items.*' => ['required', 'integer', Rule::exists('menu_items', 'id')],
+            'items.*.id' => ['required', 'integer', Rule::exists('menu_items', 'id')],
+            'items.*.quantity' => ['required', 'integer', 'min:1'],
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'user_id' => 'User ID',
+            'items.*.id' => 'Item ID',
+            'items.*.quantity' => 'Item Quantity',
         ];
     }
 }

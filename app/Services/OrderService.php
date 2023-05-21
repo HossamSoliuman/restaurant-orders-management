@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\User;
 use App\Traits\ApiResponse;
 use Illuminate\Support\Facades\Auth;
@@ -45,44 +46,50 @@ class OrderService
   }
 
 
-  public function addItems(Order $order, $items)
+  public function updateOrder(Order $order, array $validatedData): Order
   {
-    if ($items) {
-
-      if (!in_array($order->status, $this->notGoneAwaystatus)) {
-        return $this->errorResponse('order can not be updated now', 400);
-      }
-      // $order->orderItem
+    if (isset($validatedData['status'])) {
+      $this->updateStatus($order, $validatedData['status']);
     }
+
+    if (isset($validatedData['items'])) {
+      $this->updateItems($order, $validatedData['items']);
+    }
+
+    return $order->fresh();
   }
 
-
-  public function updateStatus(Order $order, $status)
+  private function updateStatus(Order $order, string $status): void
   {
-    if ($status) {
+    $order->status = $status;
+    $order->save();
+  }
 
-      $role = auth()->user()->role;
-      $updates = match ($role) {
-        'checker' => ['received', 'ready to be prepared'],
-        'chef' => ['preparing', 'ready to be delivered'],
-        'delivery' => ['delivering', 'completed'],
-      };
+  private function updateItems(Order $order, array $items): void
+  {
+    $orderItems = [];
 
-      if (in_array($status, $updates)) {
-        $order->status = $status;
-        $order->save();
-        return $this->successResponse(OrderResource::make($order));
-      }
-
-      if ($status == 'canceled') {
-        if ($order->user_id == auth()->id() && in_array($order->status, $this->notGoneAwaystatus)) {
-          $order->status = $status;
-          $order->save();
-          return $this->successResponse(OrderResource::make($order));
-        }
-      }
-      
-      return $this->errorResponse('You not allowed to update for this status', 401);
+    foreach ($items as $item) {
+      $orderItems[] = new OrderItem([
+        'menu_item_id' => $item['id'],
+        'quantity' => $item['quantity'],
+      ]);
     }
+
+    $order->orderItems()->saveMany($orderItems);
+  }
+
+  public function show(Order $order)
+  {
+    $role = auth()->user()->role->name;
+    if ($role == 'user') {
+      if (auth()->id() != $order->user_id) {
+        return $this->errorResponse('You not allowed to see this order details', 401);
+      }
+      $order->load(['orderAddress', 'orderItems']);
+      return $this->successResponse(OrderResource::make($order));
+    }
+    $order->load(['orderAddress', 'orderItems', 'user']);
+    return $this->successResponse(OrderResource::make($order));
   }
 }

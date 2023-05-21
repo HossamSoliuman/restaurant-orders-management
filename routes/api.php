@@ -38,7 +38,6 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
         'menuItemImages' => MenuItemImageController::class,
         'offers' => OfferController::class,
         'roles' => RoleController::class,
-        'orders' => OrderController::class,
     ]);
 });
 
