@@ -28,7 +28,7 @@ class UpdateOrderRequest extends FormRequest
             'items' => [ 'array', 'min:1'],
             'items.*.id' => ['integer', Rule::exists('menu_items', 'id')],
             'items.*.quantity' => ['integer', 'min:1'],
-            'status' => ['string', 'in:pending,received,preparing,delivering,canceled'],    
+            'status' => ['string'],    
         ];
     }
 }

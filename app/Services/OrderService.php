@@ -5,9 +5,7 @@ namespace App\Services;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\User;
 use App\Traits\ApiResponse;
-use Illuminate\Support\Facades\Auth;
 
 class OrderService
 {
@@ -59,10 +57,31 @@ class OrderService
     return $order->fresh();
   }
 
-  private function updateStatus(Order $order, string $status): void
+  public function updateStatus(Order $order, $status)
   {
-    $order->status = $status;
-    $order->save();
+    if ($status) {
+
+      $role = auth()->user()->role->name;
+      $updates = match ($role) {
+        'checker' => ['received', 'ready to be prepared'],
+        'chef' => ['preparing', 'ready to be delivered'],
+        'delivery' => ['delivering', 'completed'],
+        'user' => [],
+        'admin' => [],
+      };
+
+      if (in_array($status, $updates)) {
+        $order->status = $status;
+        $order->save();
+      }
+
+      if ($status == 'canceled') {
+        if ($order->user_id == auth()->id() && in_array($order->status, $this->notGoneAwaystatus)) {
+          $order->status = $status;
+          $order->save();
+        }
+      }
+    }
   }
 
   private function updateItems(Order $order, array $items): void

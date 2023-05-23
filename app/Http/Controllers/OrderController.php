@@ -9,6 +9,7 @@ use App\Http\Resources\OrderResource;
 use App\Models\OrderItem;
 use App\Services\OrderService;
 use App\Traits\ApiResponse;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -19,9 +20,14 @@ class OrderController extends Controller
      * @param  \App\Http\Requests\StoreOrderRequest  $request
      * @return \Illuminate\Http\Response
      */
+    public function index(OrderService $orderService)
+    {
+        $orders = $orderService->GetCurrentOrdersBaseOnUserRole();
+        return $this->customResponse($orders);
+    }
     public function store(StoreOrderRequest $request)
     {
-        // return $request->validated();
+        // return $request->all();
         $order = Order::create([
             'user_id' => auth()->id(),
             'order_address_id' => $request->validated('order_address_id'),
@@ -59,7 +65,6 @@ class OrderController extends Controller
 
     public function update(UpdateOrderRequest $request, Order $order, OrderService $orderService)
     {
-        return $request->validated();
         $validatedData = $request->validated();
         $updatedOrder = $orderService->updateOrder($order, $validatedData);
         $updatedOrder->load(['orderAddress', 'orderItems', 'user']);
