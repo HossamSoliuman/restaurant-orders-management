@@ -31,6 +31,7 @@ class OrderService
     if ($role == 'admin') {
       $orders = Order::where('status', '!=', 'completed')->get();
     }
+
     if ($role == 'chef') {
       $orders = Order::WhereStatus('preparing')->get();
     }
@@ -63,7 +64,7 @@ class OrderService
 
       $role = auth()->user()->role->name;
       $updates = match ($role) {
-        'checker' => ['received', 'ready to be prepared'],
+        'reviewer' => ['received', 'ready to be prepared'],
         'chef' => ['preparing', 'ready to be delivered'],
         'delivery' => ['delivering', 'completed'],
         'user' => [],

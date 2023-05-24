@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderCreated;
+use App\Events\OrderStatusUpdated;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
@@ -9,7 +11,6 @@ use App\Http\Resources\OrderResource;
 use App\Models\OrderItem;
 use App\Services\OrderService;
 use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -27,7 +28,6 @@ class OrderController extends Controller
     }
     public function store(StoreOrderRequest $request)
     {
-        // return $request->all();
         $order = Order::create([
             'user_id' => auth()->id(),
             'order_address_id' => $request->validated('order_address_id'),
@@ -49,7 +49,10 @@ class OrderController extends Controller
 
         $order->load('orderItems', 'orderAddress');
 
-        return $this->successResponse(OrderResource::make($order));
+        $formatedOrder=OrderResource::make($order);
+        event(new OrderCreated($formatedOrder));
+
+        return $this->successResponse($formatedOrder);
     }
 
     /**
@@ -68,6 +71,8 @@ class OrderController extends Controller
         $validatedData = $request->validated();
         $updatedOrder = $orderService->updateOrder($order, $validatedData);
         $updatedOrder->load(['orderAddress', 'orderItems', 'user']);
-        return $this->successResponse(OrderResource::make($updatedOrder));
+        $formatedOrder=OrderResource::make($updatedOrder);
+        event(new OrderStatusUpdated($formatedOrder));
+        return $this->successResponse($formatedOrder);
     }
 }
