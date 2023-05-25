@@ -50,7 +50,6 @@ class AuthenticationController extends Controller
         $user = User::where('phone', $validatedData['phone_or_email'])->first();
         $user = User::where('email', $validatedData['phone_or_email'])->first();
 
-
         if (!$user || !Hash::check($validatedData['password'], $user->password)) {
             return $this->errorResponse(
                 'Invalid credentials', 

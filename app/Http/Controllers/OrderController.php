@@ -15,12 +15,7 @@ use App\Traits\ApiResponse;
 class OrderController extends Controller
 {
     use ApiResponse;
-    /**a
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreOrderRequest  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function index(OrderService $orderService)
     {
         $orders = $orderService->GetCurrentOrdersBaseOnUserRole();
@@ -41,7 +36,6 @@ class OrderController extends Controller
             $orderItems[] = new OrderItem([
                 'menu_item_id' => $item['id'],
                 'quantity' => $item['quantity'],
-
             ]);
         }
 
@@ -50,17 +44,12 @@ class OrderController extends Controller
         $order->load('orderItems', 'orderAddress');
 
         $formatedOrder=OrderResource::make($order);
+
         event(new OrderCreated($formatedOrder));
 
         return $this->successResponse($formatedOrder);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Order  $order
-     * @return \Illuminate\Http\Response
-     */
     public function show(Order $order, OrderService $orderService)
     {
         return $orderService->show($order);
@@ -72,6 +61,7 @@ class OrderController extends Controller
         $updatedOrder = $orderService->updateOrder($order, $validatedData);
         $updatedOrder->load(['orderAddress', 'orderItems', 'user']);
         $formatedOrder=OrderResource::make($updatedOrder);
+        
         event(new OrderStatusUpdated($formatedOrder));
         return $this->successResponse($formatedOrder);
     }

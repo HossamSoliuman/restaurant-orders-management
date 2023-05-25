@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
+
 Broadcast::channel('orders.{order}', function ($user, Order $order) {
     return $user->id ===  $order->user_id;
 });

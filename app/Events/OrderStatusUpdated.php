@@ -34,23 +34,24 @@ class OrderStatusUpdated implements ShouldBroadcast
     {
         $role = auth()->user()->role->name;
         $order = $this->order;
-        $chefStatus = ['ready to be prepared', 'preparing'];
-        $deliveryStatus = ['ready to be delivered', 'delivering'];
-        if (in_array($order->status, $chefStatus))
-            if ($role == 'chef') {
-                return [
-                    new PrivateChannel('chef'),
-                    new PrivateChannel('admin'),
-                    new PrivateChannel('orders.' . $order->id),
-                ];
-            }
-        if (in_array($order->status, $deliveryStatus))
-            if ($role == 'delivery') {
-                return [
-                    new PrivateChannel('delivery'),
-                    new PrivateChannel('admin'),
-                    new PrivateChannel('orders.' . $order->id)
-                ];
-            }
+
+        if ($role == 'chef' && $order->status == 'ready to be prepared') {
+            return [
+                new PrivateChannel('chef'),
+                new PrivateChannel('admin'),
+                new PrivateChannel('orders.' . $order->id),
+            ];
+        }
+        if ($role == 'delivery' && $order->status == 'ready to be delivered') {
+            return [
+                new PrivateChannel('delivery'),
+                new PrivateChannel('admin'),
+                new PrivateChannel('orders.' . $order->id),
+            ];
+        }
+        return [
+            new PrivateChannel('admin'),
+            new PrivateChannel('orders.' . $order->id),
+        ];
     }
 }

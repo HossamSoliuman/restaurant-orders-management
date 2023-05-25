@@ -33,13 +33,13 @@ class OrderService
     }
 
     if ($role == 'chef') {
-      $orders = Order::WhereStatus('preparing')->get();
+      $orders = Order::WhereStatus('preparing')->orWhere('status','ready to be prepared')->get();
     }
     if ($role == 'delivery') {
-      $orders = Order::whereUserId($user_id)->whereStatus('deliverying')->get();
+      $orders = Order::whereUserId($user_id)->whereStatus('deliverying')->orWhere('status','ready to be delivered')->get();
     }
     if ($role == 'reviewer') {
-      $orders = Order::where('status', 'send')->get();
+      $orders = Order::where('status', 'pending')->orWhere('status','reviewing')->get();
     }
     return OrderResource::collection($orders);
   }
@@ -61,10 +61,9 @@ class OrderService
   public function updateStatus(Order $order, $status)
   {
     if ($status) {
-
       $role = auth()->user()->role->name;
       $updates = match ($role) {
-        'reviewer' => ['received', 'ready to be prepared'],
+        'reviewer' => ['received','reviewing', 'ready to be prepared'],
         'chef' => ['preparing', 'ready to be delivered'],
         'delivery' => ['delivering', 'completed'],
         'user' => [],
