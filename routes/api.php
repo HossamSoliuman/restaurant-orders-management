@@ -2,10 +2,12 @@
 
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\MenuItemImageController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +40,7 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
         'menuItemImages' => MenuItemImageController::class,
         'offers' => OfferController::class,
         'roles' => RoleController::class,
+        'posts' => PostController::class,
     ]);
 });
 
@@ -45,7 +48,7 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 Route::apiResources(
     [
         'categories' => CategoryController::class,
-
+        'posts' => PostController::class,
     ],
     [
         'only' => ['show', 'index']
@@ -62,11 +65,11 @@ Route::apiResources(
         'only' => ['show']
     ]
 );
-
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResources([
         'reviews' => ReviewController::class,
         'orders' => OrderController::class,
+        'comments' => CommentController::class,
     ]);
     Route::post('logout', [AuthenticationController::class, 'logout']);
 });
