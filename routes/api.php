@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\MenuItemImageController;
 use App\Http\Controllers\OfferController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,12 +29,18 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [AuthenticationController::class, 'login']);
 Route::post('register', [AuthenticationController::class, 'register']);
 Route::post('logout', [AuthenticationController::class, 'logout']);
-
+//admin routes
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
 
     Route::delete('menuItems/deleted', [MenuItemController::class, 'deleted']);
     Route::delete('menuItems/force/{menuItem}', [MenuItemController::class, 'forceDestroy']);
     Route::get('menuItems/restore/{menuItem}', [MenuItemController::class, 'restore']);
+
+    Route::prefix('dashboard/')->group(function(){
+        Route::get('orders/chart-data', [DashboardController::class,'ordersChartData']);
+        Route::get('orders/{startDate}/{endDate?}', [DashboardController::class,'totalOrders']);
+        Route::get('total-users', [DashboardController::class,'totalUsers']);
+    });
 
     Route::resources([
         'category' => CategoryController::class,
