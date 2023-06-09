@@ -17,7 +17,9 @@ class PostFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'title'=>fake()->sentence(3),
+            'body'=>fake()->sentence(),
+            'likes_count'=>rand(3,120),
         ];
     }
 }

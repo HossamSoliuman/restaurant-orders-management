@@ -13,7 +13,7 @@ class StorePostRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,8 +25,9 @@ class StorePostRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'body' => 'required|text',
-            'images' => 'array',
+            'body' => 'required|string',
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // allow JPEG, PNG, JPG, or GIF images up to 2MB in size
         ];
     }
 }

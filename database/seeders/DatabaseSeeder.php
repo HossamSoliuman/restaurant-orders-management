@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
             OrderAddressSeeder::class,
             OrderSeeder::class,
             OrderItemSeeder::class,
+            PostSeeder::class,
+            PostImageSeeder::class,
+            CommentSeeder::class,
         ]);
     }
 }

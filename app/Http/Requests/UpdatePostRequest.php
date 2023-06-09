@@ -13,7 +13,7 @@ class UpdatePostRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return 1;
     }
 
     /**
@@ -25,7 +25,7 @@ class UpdatePostRequest extends FormRequest
     {
         return [
             'title' => 'string',
-            'body' => 'text',
+            'body' => 'string',
         ];
     }
 }

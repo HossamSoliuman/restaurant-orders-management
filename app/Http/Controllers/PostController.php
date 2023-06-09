@@ -20,8 +20,14 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::get()->paginate(10);
-        $posts->load('PostImages');
+        $posts = Post::with([
+            'comments' => function ($query) {
+                $query->with('user')->latest()->first();
+            },
+            'PostImages'
+        ])
+            ->orderBy('id', 'desc')
+            ->paginate(4);
         return $this->successResponse(PostResource::collection($posts));
     }
 
@@ -35,9 +41,10 @@ class PostController extends Controller
     {
         $post = Post::create($request->validated());
         $images = $request->validated('images');
+        if($images)
         foreach ($images as $image) {
-            $path = $this->uploadFile($image, 'posts_images');
-            $post->postImages->create([
+            $path = $this->uploadFile($image, 'images/posts');
+            $post->postImages()->create([
                 'path' => $path,
             ]);
         }
@@ -83,5 +90,6 @@ class PostController extends Controller
             $this->deleteFile($image->path);
         }
         $post->delete();
+        return $this->customResponse('Successfully deleted');
     }
 }

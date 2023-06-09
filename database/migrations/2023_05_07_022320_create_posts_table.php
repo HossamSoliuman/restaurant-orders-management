@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title')->nullable();
             $table->text('body')->nullable();
-            $table->integer('likes_count');
+            $table->integer('likes_count')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

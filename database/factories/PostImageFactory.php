@@ -17,7 +17,8 @@ class PostImageFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'path'=>'posts/img.jpg',
+            'post_id'=>rand(1,20),
         ];
     }
 }
