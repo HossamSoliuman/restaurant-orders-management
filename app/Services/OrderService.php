@@ -14,33 +14,47 @@ class OrderService
   public function __construct()
   {
     $this->notGoneAwaystatus = [
-      'pending',
-      'received',
-      'ready to be prepared', 'preparing'
-    ];
+      Order::STATUS_PENDING,
+      Order::STATUS_RECEIVED,
+      Order::STATUS_READY_TO_BE_PREPARED,
+      Order::STATUS_PREPARING,
+  ];
   }
-  public function GetCurrentOrdersBaseOnUserRole()
+  public function getCurrentOrdersBaseOnUserRole()
   {
     $role = auth()->user()->role->name;
 
     $user_id = auth()->user()->id;
     $orders = null;
     if ($role == 'user') {
-      $orders = Order::whereUserId($user_id)->where('status', '!=', 'completed')->get();
+      $orders = Order::whereUserId($user_id)
+        ->where('status', '!=', Order::STATUS_COMPLETED)
+        ->get();
     }
     if ($role == 'admin') {
-      $orders = Order::where('status', '!=', 'completed')->get();
+      $orders = Order::where('status', '!=', Order::STATUS_COMPLETED)
+        ->get();
     }
 
     if ($role == 'chef') {
-      $orders = Order::WhereStatus('preparing')->orWhere('status','ready to be prepared')->get();
+      $orders = Order::where('status', '=', Order::STATUS_PREPARING)
+        ->orWhere('status', '=', Order::STATUS_READY_TO_BE_PREPARED)
+        ->get();
     }
     if ($role == 'delivery') {
-      $orders = Order::whereUserId($user_id)->whereStatus('deliverying')->orWhere('status','ready to be delivered')->get();
+      $orders = Order::whereUserId($user_id)
+        ->where(function ($query) {
+          $query->where('status', '=', Order::STATUS_DELIVERING)
+            ->orWhere('status', '=', Order::STATUS_READY_TO_BE_DELIVERED);
+        })
+        ->get();
     }
     if ($role == 'reviewer') {
-      $orders = Order::where('status', 'pending')->orWhere('status','reviewing')->get();
+      $orders = Order::where('status', '=', Order::STATUS_PENDING)
+        ->orWhere('status', '=', Order::STATUS_REVIEWING)
+        ->get();
     }
+
     return OrderResource::collection($orders);
   }
 
@@ -63,9 +77,19 @@ class OrderService
     if ($status) {
       $role = auth()->user()->role->name;
       $updates = match ($role) {
-        'reviewer' => ['received','reviewing', 'ready to be prepared'],
-        'chef' => ['preparing', 'ready to be delivered'],
-        'delivery' => ['delivering', 'completed'],
+        'reviewer' => [
+          Order::STATUS_RECEIVED,
+          Order::STATUS_REVIEWING,
+          Order::STATUS_READY_TO_BE_PREPARED,
+        ],
+        'chef' => [
+          Order::STATUS_PREPARING,
+          Order::STATUS_READY_TO_BE_DELIVERED,
+        ],
+        'delivery' => [
+          Order::STATUS_DELIVERING,
+          Order::STATUS_COMPLETED,
+        ],
         'user' => [],
         'admin' => [],
       };
@@ -75,7 +99,7 @@ class OrderService
         $order->save();
       }
 
-      if ($status == 'canceled') {
+      if ($status == Order::STATUS_CANCELED) {
         if ($order->user_id == auth()->id() && in_array($order->status, $this->notGoneAwaystatus)) {
           $order->status = $status;
           $order->save();

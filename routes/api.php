@@ -40,6 +40,7 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
         Route::get('orders/chart-data', [DashboardController::class,'ordersChartData']);
         Route::get('orders/{startDate}/{endDate?}', [DashboardController::class,'totalOrders']);
         Route::get('total-users', [DashboardController::class,'totalUsers']);
+        Route::get('/role/{user}/{role}',[DashboardController::class,'setUserRole']);
     });
 
     Route::resources([
@@ -62,6 +63,7 @@ Route::apiResources(
         'only' => ['show', 'index']
     ]
 );
+
 
 Route::apiResources(
     [

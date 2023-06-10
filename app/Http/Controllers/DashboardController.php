@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\Order;
 use App\Models\User;
 use App\Traits\ApiResponse;
@@ -61,5 +62,11 @@ class DashboardController extends Controller
         return $this->successResponse([
             'total_users' => $totalUsers,
         ]);
+    }
+    public function setUserRole(User $user,$role_id){
+        $user->update([
+            'role_id'=>$role_id,
+        ]);
+        return $this->successResponse(UserResource::make($user));
     }
 }
