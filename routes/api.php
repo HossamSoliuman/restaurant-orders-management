@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\MenuItemImageController;
 use App\Http\Controllers\OfferController;
@@ -52,8 +53,16 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
         'posts' => PostController::class,
     ]);
 });
-
-
+// auth routes
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResources([
+        'reviews' => ReviewController::class,
+        'orders' => OrderController::class,
+        'comments' => CommentController::class,
+    ]);
+    Route::post('logout', [AuthenticationController::class, 'logout']);
+});
+// public routes
 Route::apiResources(
     [
         'categories' => CategoryController::class,
@@ -75,11 +84,8 @@ Route::apiResources(
         'only' => ['show']
     ]
 );
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::apiResources([
-        'reviews' => ReviewController::class,
-        'orders' => OrderController::class,
-        'comments' => CommentController::class,
-    ]);
-    Route::post('logout', [AuthenticationController::class, 'logout']);
-});
+
+Route::get('home/menu',[HomeController::class,'menu']);
+Route::get('home/posts',[HomeController::class,'posts']);
+Route::get('home/offers',[HomeController::class,'offers']);
+

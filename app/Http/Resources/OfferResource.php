@@ -31,6 +31,7 @@ class OfferResource extends JsonResource
             'amount' => $this->amount,
             'start_at' => "Starts {$diffStart}",
             'end_at' => "Ends {$diffEnd}",
+            'menu_item' => MenuItemResource::make($this->whenLoaded('menuItem')),
         ];
     }
 }
