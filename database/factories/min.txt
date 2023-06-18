@@ -1,3 +1,0 @@
-user -> 5
-Category -> 5
-MenuItem -> 10
