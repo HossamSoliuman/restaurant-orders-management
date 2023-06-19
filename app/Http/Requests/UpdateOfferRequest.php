@@ -24,12 +24,12 @@ class UpdateOfferRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['string', 'nullable'],  
-            'description' => ['string', 'nullable'], 
+            'name' => ['string', 'nullable'],
+            'description' => ['string', 'nullable'],
             'type' => ['nullable', 'string'],
-            'amount' => ['numeric', 'nullable'],     
-            'menu_item_id' => ['nullable', 'exists:menu_items,id'],   
-            'start_at' => ['nullable'],      
+            'amount' => ['numeric', 'nullable', 'min:0'],
+            'menu_item_id' => ['nullable', 'exists:menu_items,id'],
+            'start_at' => ['nullable', 'after_or_equal:now'],
             'end_at' => ['nullable', 'after:start_at'],
         ];
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreOfferRequest extends FormRequest
 {
@@ -26,11 +27,11 @@ class StoreOfferRequest extends FormRequest
         return [
             'name' => ['string', 'required'],
             'description' => ['string', 'required'],
-            'type' => ['required', 'string'],
-            'amount' => ['numeric', 'required'],
+            'type' => ['required', 'string', Rule::in(['percentage', 'fixed'])],
+            'amount' => ['numeric', 'required', 'min:0'],
             'menu_item_id' => ['required', 'exists:menu_items,id'],
-            'start_at' => ['required'],
-            'end_at' => ['required', 'after:start_at'],
+            'start_at' => ['required', 'date', 'after_or_equal:today'],
+            'end_at' => ['required', 'date', 'after:start_at'],
         ];
     }
 }

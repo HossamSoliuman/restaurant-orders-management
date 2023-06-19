@@ -12,6 +12,11 @@ class OfferController extends Controller
 {
     use ApiResponse;
 
+    public function index()
+    {
+        $offers = Offer::all();
+        return $this->successResponse(OfferResource::collection($offers));
+    }
     /**
      * Store a newly created resource in storage.
      *
